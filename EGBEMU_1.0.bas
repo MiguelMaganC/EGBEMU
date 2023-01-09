@@ -146,10 +146,10 @@ Sub EGBEMU()
     'Cargo la ROM en memoria
     Call loadROM
     'Cargo la BIOS
-    Call loadBIOS
-    For i = 0 To 255
-        RAM(i) = BIOS(i)
-    Next i
+    'Call loadBIOS
+    'For i = 0 To 255
+    '    RAM(i) = BIOS(i)
+    'Next i
     
     'Inicializo los registros y flags
     Call initializeRegisters
@@ -207,7 +207,7 @@ Sub EGBEMU()
     getFrequency FPSperSecond
 
     'Comienzo la CPU
-    Call CPU 'Primera instrucciÛn
+    Call CPU 'Primera instrucci√≥n
     
     'For tick = 1 To 40000000
 '    Do While tick < 40000000 And teclaPulsadaEscape <> True
@@ -305,7 +305,7 @@ Private Sub CPU()
     
     contadorInstrucciones(opCode) = contadorInstrucciones(opCode) + 1
     
-    'Empieza el cÛdigo
+    'Empieza el c√≥digo
     Select Case opCode
         Case 0 'NOP
         Case 1 'LD BC, d16
@@ -471,7 +471,7 @@ Private Sub CPU()
             flagC = (temp And 256) \ 256 'No estoy seguro si no se tiene que hacer antes de la suma anterior
         Case 24 '0x18 JR s8
             temp = RAM(regPC + 1)
-            If temp > 127 Then 'Es un n˙mero negativo, hay que restar
+            If temp > 127 Then 'Es un n√∫mero negativo, hay que restar
                 temp = 256 - temp
                 regPC = regPC - temp
             Else
@@ -536,7 +536,7 @@ Private Sub CPU()
         Case 32 '0x20 JR NZ, s8
             If flagZ = 0 Then
                 temp = RAM(regPC + 1)
-                If temp > 127 Then 'Es un n˙mero negativo, hay que restar
+                If temp > 127 Then 'Es un n√∫mero negativo, hay que restar
                     temp = 256 - temp
                     regPC = regPC - temp
                 Else
@@ -622,7 +622,7 @@ Private Sub CPU()
         Case 40 '0x28 JR Z, s8
             If flagZ = 1 Then
                 temp = RAM(regPC + 1)
-                If temp > 127 Then 'Es un n˙mero negativo, hay que restar
+                If temp > 127 Then 'Es un n√∫mero negativo, hay que restar
                     temp = 256 - temp
                     regPC = regPC - temp
                 Else
@@ -691,7 +691,7 @@ Private Sub CPU()
         Case 48 '0x30 JR NC, s8
             If flagC = 0 Then
                 temp = RAM(regPC + 1)
-                If temp > 127 Then 'Es un n˙mero negativo, hay que restar
+                If temp > 127 Then 'Es un n√∫mero negativo, hay que restar
                     temp = 256 - temp
                     regPC = regPC - temp
                 Else
@@ -753,7 +753,7 @@ Private Sub CPU()
         Case 56 '0x38 JR C, s8
             If flagC = 1 Then
                 temp = RAM(regPC + 1)
-                If temp > 127 Then 'Es un n˙mero negativo, hay que restar
+                If temp > 127 Then 'Es un n√∫mero negativo, hay que restar
                     temp = 256 - temp
                     regPC = regPC - temp
                 Else
@@ -1754,10 +1754,10 @@ Private Sub CPU()
             If regA = regA Then
                 flagZ = 1
             End If
-            If regA < regA Then 'ø?
+            If regA < regA Then '¬ø?
                 flagC = 1
             End If
-            If (regA And 15) < (regA And 15) Then 'ø?
+            If (regA And 15) < (regA And 15) Then '¬ø?
                 flagH = 1
             End If
         Case 192 '0xC0 RET NZ
@@ -2479,7 +2479,7 @@ Private Sub CPU()
         Case 250 '0xFA LD A, (a16)
             regA = RAM((RAM(regPC + 2) * 256&) + RAM(regPC + 1))
         Case 251 '0xFB EI
-            setInterruptsInNextCycle = True 'Es que el IME = 1 no se hace aqui, sino despuÈs de la siguiente instrucciÛn
+            setInterruptsInNextCycle = True 'Es que el IME = 1 no se hace aqui, sino despu√©s de la siguiente instrucci√≥n
             'flagIME = True
         Case 252 '0xFC
             Debug.Print "Opcode 252 (0xFC) no existe. RegPC: " + regPCHex
@@ -2534,7 +2534,7 @@ Private Sub CPU()
     tickNextInstruction = tick + Cycles(opCode)
     
     Call checkInterrupts
-    If setInterruptsInNextCycle = True Then 'AsÌ dejo que se ejecute la siguiente instrucciÛn antes de que salte a una interrupciÛn
+    If setInterruptsInNextCycle = True Then 'As√≠ dejo que se ejecute la siguiente instrucci√≥n antes de que salte a una interrupci√≥n
         setInterruptsInNextCycle = False
         flagIME = True
     End If
@@ -2559,13 +2559,13 @@ Private Sub PPU()
     
     Dim currentPaintedRow As Byte
     
-    If LCDEnabled Then 'Solo si el LCD est· habilitado
+    If LCDEnabled Then 'Solo si el LCD est√° habilitado
         currentPaintedRow = RAM(regLY)
         If PPUTick >= 0 And PPUTick < 20 Then 'OAM SEARCH
             If PPUTick = 0 Then
                 RAM(regSTAT) = (RAM(regSTAT) And 252) Or 2 'Pongo el modo 2
-                If (RAM(regSTAT) And 32) Then 'Si est· habilitada la interrupciÛn para este modo
-                    RAM(regIF) = RAM(regIF) Or 2 'Set el flag de interrupciÛn de STAT
+                If (RAM(regSTAT) And 32) Then 'Si est√° habilitada la interrupci√≥n para este modo
+                    RAM(regIF) = RAM(regIF) Or 2 'Set el flag de interrupci√≥n de STAT
                 End If
             End If
             If spriteEnabled And spritesDirty Then
@@ -2574,14 +2574,14 @@ Private Sub PPU()
                 dirOAMOfObject = dirOAM + ((PPUTick * 2) * 4)
                 spritePosY = RAM(dirOAMOfObject + 0)
                 spritePosX = RAM(dirOAMOfObject + 1)
-                If currentPaintedRow + 16 >= spritePosY And currentPaintedRow + 16 < spritePosY + 8 Then 'AÒadimos este sprite al array de sprites a pintar en esta linea
+                If currentPaintedRow + 16 >= spritePosY And currentPaintedRow + 16 < spritePosY + 8 Then 'A√±adimos este sprite al array de sprites a pintar en esta linea
                     spritesDirtyBuffer(spritePosX) = dirOAMOfObject
                 End If
                 'Segundo sprite
                 dirOAMOfObject = dirOAMOfObject + 4
                 spritePosY = RAM(dirOAMOfObject + 0)
                 spritePosX = RAM(dirOAMOfObject + 1)
-                If currentPaintedRow + 16 >= spritePosY And currentPaintedRow + 16 < spritePosY + 8 Then 'AÒadimos este sprite al array de sprites a pintar en esta linea
+                If currentPaintedRow + 16 >= spritePosY And currentPaintedRow + 16 < spritePosY + 8 Then 'A√±adimos este sprite al array de sprites a pintar en esta linea
                     spritesDirtyBuffer(spritePosX) = dirOAMOfObject
                 End If
             End If
@@ -2662,10 +2662,10 @@ Private Sub PPU()
                     'Pixel mixer (mezcla background con sprites)
                     If BGEnabled Then
                         If spriteEnabled And dirOfSpriteToBeDrawn <> 0 Then
-                            If SpriteColor = 0 Then 'Si es 0 es transparente y sÛlo se dibuja el background
+                            If SpriteColor = 0 Then 'Si es 0 es transparente y s√≥lo se dibuja el background
                                 pixelColor = BGP(pixelColor)
                             Else
-                                If (pixelColor = 0) Or (prioridad = True) Then 'Tiene prioridad sobre el BG asÌ que se dibuja el sprite
+                                If (pixelColor = 0) Or (prioridad = True) Then 'Tiene prioridad sobre el BG as√≠ que se dibuja el sprite
                                     If paleta1 Then
                                         pixelColor = OBP1(SpriteColor)
                                     Else
@@ -2680,7 +2680,7 @@ Private Sub PPU()
                         End If
                     End If
                                         
-                    'Si el pixel no es del mismo color que ya habÌa lo aÒado al array que se va a pintar cuando se refresque la pantalla
+                    'Si el pixel no es del mismo color que ya hab√≠a lo a√±ado al array que se va a pintar cuando se refresque la pantalla
                     screenPixelColor = screen(posX, posY)
                     If pixelColor <> screenPixelColor Then
                         screen(posX, posY) = pixelColor
@@ -2703,8 +2703,8 @@ Private Sub PPU()
                 
         ElseIf PPUTick = 63 Then 'H-BLANK (MODE 0)
             RAM(regSTAT) = (RAM(regSTAT) And 252) Or 0 'Pongo el modo 0
-            If (RAM(regSTAT) And 8) Then 'Si est· habilitada la interrupciÛn para este modo
-                RAM(regIF) = RAM(regIF) Or 2 'Set el flag de interrupciÛn de STAT
+            If (RAM(regSTAT) And 8) Then 'Si est√° habilitada la interrupci√≥n para este modo
+                RAM(regIF) = RAM(regIF) Or 2 'Set el flag de interrupci√≥n de STAT
             End If
         ElseIf PPUTick = 114 Then 'Es mayor que 114, ha acabado la linea y tiene que empezar una nueva
             Erase spritesDirtyBuffer
@@ -2724,7 +2724,7 @@ Private Sub updateLY()
     Dim i, j As Byte 'i: Del 1 al 160 (posicion X del pixel ---- j: Del 1 al 4 (colores)
     Dim colorXRange(3) As Range
     
-    If LCDEnabled = True Then 'Si el LCD est· habilitado
+    If LCDEnabled = True Then 'Si el LCD est√° habilitado
         If screenDirty = True Then
             For j = 0 To 3
                 If colorArrayrangeStr(j, 0) <> "" Then
@@ -2814,8 +2814,8 @@ Private Sub updateLY()
             End If
         End If
         
-        If (RAM(regLY) = RAM(regLYC)) And (RAM(regSTAT) And 64) Then 'LY = LYC y est· habilitada la interrupciÛn?
-            RAM(regIF) = RAM(regIF) Or 2 'Set el flag de interrupciÛn de STAT
+        If (RAM(regLY) = RAM(regLYC)) And (RAM(regSTAT) And 64) Then 'LY = LYC y est√° habilitada la interrupci√≥n?
+            RAM(regIF) = RAM(regIF) Or 2 'Set el flag de interrupci√≥n de STAT
         End If
     End If
 End Sub
@@ -2964,7 +2964,7 @@ Private Sub writeRAM(RAMAddress As Long, RAMValue As Byte)
         Case regNR51 'Sonido, no implementado
         Case regLCDC 'LCDC (FF40)
             'Debug.Print Hex(regPC) & ":RAMAddress FF40 (LCDC register)" & " Valor: " & Hex(RAMValue)
-            If (RAM(regLCDC) And 128) = 128 Then 'Si el LCD est· habilitado
+            If (RAM(regLCDC) And 128) = 128 Then 'Si el LCD est√° habilitado
                 If LCDEnabled = False Then
                     Debug.Print "LCD ENABLED"
                 End If
